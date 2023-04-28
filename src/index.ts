@@ -22,7 +22,7 @@ class Exercise {
           html += `
             <div id="content">
               <p>${habit.habitname}</p>
-              <span>${habit.habitdate} (stopped habit ${diffInDays} days ago)</span>
+              <span>${habit.habitdate} (Stopped habit ${diffInDays} days ago)</span>
             </div>
           `;
         });
@@ -49,7 +49,7 @@ addButton.addEventListener("click", () => {
   const habitName = document.querySelector("#name") as HTMLInputElement;
   const habitDate = document.querySelector("#date") as HTMLInputElement;
   const input: Input = {
-    id: 0, // You may want to generate a unique ID for each input instead of hardcoding it to 0.
+    id: 0,
     habitname: habitName.value,
     habitdate: habitDate.value,
   };
