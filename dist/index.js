@@ -21,20 +21,41 @@ class Exercise {
             let html = "";
             habits.forEach((habit) => {
                 html += `
-          <div id="content">
-            <p>${habit.habitname}</p>
-            <span>${habit.habitdate}</span>
-          </div>
-        `;
+        <div id="content">
+          <p>${habit.habitname}</p>
+          <span>${habit.habitdate}</span>
+        </div>
+      `;
             });
             const hdisplay = document.querySelector("#display");
             hdisplay.innerHTML = html;
         });
     }
+    addHabit(input) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield fetch("http://localhost:3000/habits", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(input),
+            });
+            const result = yield response.json();
+            console.log(result);
+        });
+    }
 }
-const exercise = new Exercise();
-exercise.showHabits();
-const acontainer = document.querySelector("#albums");
-acontainer.addEventListener("change", () => {
-    exercise.showHabits();
+const addButton = document.querySelector("#addBtn");
+addButton.addEventListener("click", () => {
+    const habitName = document.querySelector("#name");
+    const habitDate = document.querySelector("#date");
+    const input = {
+        id: 0,
+        habitname: habitName.value,
+        habitdate: habitDate.value,
+    };
+    new Exercise().addHabit(input);
+    habitName.value = "";
+    habitDate.value = "";
 });
+new Exercise().showHabits();

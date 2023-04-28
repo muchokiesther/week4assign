@@ -1,57 +1,56 @@
-interface Iexercsie{
-        id:number
-        habitname:string
-        // data:Date
+interface Input {
+  id: number;
+  habitname: string;
+  habitdate: string;
 }
 
-interface Input{
-    id:number
-    habitname:string
-    habitdate:string
+class Exercise {
+  async showHabits() {
+    const response = await fetch("http://localhost:3000/habits", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const habits = await response.json();
+    let html = "";
+    habits.forEach((habit: Input) => {
+      html += `
+        <div id="content">
+          <p>${habit.habitname}</p>
+          <span>${habit.habitdate}</span>
+        </div>
+      `;
+    });
+    const hdisplay = document.querySelector("#display") as HTMLDivElement;
+    hdisplay.innerHTML = html;
+  }
+
+  async addHabit(input: Input) {
+    const response = await fetch("http://localhost:3000/habits", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(input),
+    });
+    const result = await response.json();
+    console.log(result);
+  }
 }
 
+const addButton = document.querySelector("#addBtn") as HTMLButtonElement;
+addButton.addEventListener("click", () => {
+  const habitName = document.querySelector("#name") as HTMLInputElement;
+  const habitDate = document.querySelector("#date") as HTMLInputElement;
+  const input: Input = {
+    id: 0, // You may want to generate a unique ID for each input instead of hardcoding it to 0.
+    habitname: habitName.value,
+    habitdate: habitDate.value,
+  };
+  new Exercise().addHabit(input);
+  habitName.value = "";
+  habitDate.value = "";
+});
 
-
-class exercise{
-     async Showhabits() {
-                    const response = await fetch("http://localhost:3000/habits", {
-                      method: "GET",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                    });
-            const habits = await response.json();
-            //console.log(habits);
-            let html=''
-            habits.forEach((habit: { habitname: string; habitdate: string}) => {
-                html+=`
-                <div id="content">
-             <p>${habit.habitname}</p>
-             <span>${habit.habitdate}</span>
-             </div>
-                `
-            });
-            const hdisplay =document.querySelector("#display") as HTMLDivElement
-            hdisplay.innerHTML = html;
-        }
-}
-
-new exercise().Showhabits()
-
-
-async function collectdata(){
-    let collecteddata=await fetch('http://localhost:3000/habits')
-    let nhabits=await collecteddata.json()
-    console.log(nhabits)
-}
-
-
-collectdata();
-
-const acontainer = document.querySelector('#albums') as HTMLSelectElement
-
-acontainer.addEventListener('change', ()=>{  
-    new exercise().Showhabits({acontainer.value} )
-    console.log(+acontainer.value);
-    
-})
+new Exercise().showHabits();
