@@ -5,26 +5,31 @@ interface Input {
 }
 
 class Exercise {
-  async showHabits() {
-    const response = await fetch("http://localhost:3000/habits", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const habits = await response.json();
-    let html = "";
-    habits.forEach((habit: Input) => {
-      html += `
-        <div id="content">
-          <p>${habit.habitname}</p>
-          <span>${habit.habitdate}</span>
-        </div>
-      `;
-    });
-    const hdisplay = document.querySelector("#display") as HTMLDivElement;
-    hdisplay.innerHTML = html;
-  }
+    async showHabits() {
+        const response = await fetch("http://localhost:3000/habits", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const habits = await response.json();
+        let html = "";
+        habits.forEach((habit: Input) => {
+          const today = new Date();
+          const habitDate = new Date(habit.habitdate);
+          const diffInMs = today.getTime() - habitDate.getTime();
+          const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+          html += `
+            <div id="content">
+              <p>${habit.habitname}</p>
+              <span>${habit.habitdate} (stopped habit ${diffInDays} days ago)</span>
+            </div>
+          `;
+        });
+        const hdisplay = document.querySelector("#display") as HTMLDivElement;
+        hdisplay.innerHTML = html;
+      }
+      
 
   async addHabit(input: Input) {
     const response = await fetch("http://localhost:3000/habits", {

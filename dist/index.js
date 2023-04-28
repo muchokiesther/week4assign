@@ -20,12 +20,16 @@ class Exercise {
             const habits = yield response.json();
             let html = "";
             habits.forEach((habit) => {
+                const today = new Date();
+                const habitDate = new Date(habit.habitdate);
+                const diffInMs = today.getTime() - habitDate.getTime();
+                const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
                 html += `
-        <div id="content">
-          <p>${habit.habitname}</p>
-          <span>${habit.habitdate}</span>
-        </div>
-      `;
+            <div id="content">
+              <p>${habit.habitname}</p>
+              <span>${habit.habitdate} (stopped habit ${diffInDays} days ago)</span>
+            </div>
+          `;
             });
             const hdisplay = document.querySelector("#display");
             hdisplay.innerHTML = html;
